@@ -1,103 +1,106 @@
-import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-white">
+      <Header />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12">
+        {/* Hero Section */}
+        <section className="text-center mb-16">
+          <h2 className="text-5xl font-bold text-gray-900 mb-4">
+            Capturing Life's Beautiful Moments
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Professional photography services specializing in landscapes, real estate, and motion photography.
+          </p>
+        </section>
+
+        {/* Photography Categories */}
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            Photography Categories
+          </h3>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Landscape */}
+            <Link href="/landscape" className="group">
+              <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="h-64 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                  <div className="text-white text-center">
+                    <svg className="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M14 6l-3.75 5 2.85 3.8-1.6 1.2C9.81 13.75 7 10 7 10l-6 8h22L14 6z"/>
+                    </svg>
+                    <h4 className="text-2xl font-bold">Landscape</h4>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-600 group-hover:text-gray-800 transition-colors">
+                    Breathtaking natural landscapes and scenic views that capture the beauty of nature.
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            {/* Real Estate */}
+            <Link href="/real-estate" className="group">
+              <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="h-64 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                  <div className="text-white text-center">
+                    <svg className="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3L19 9.3z"/>
+                    </svg>
+                    <h4 className="text-2xl font-bold">Real Estate</h4>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-600 group-hover:text-gray-800 transition-colors">
+                    Professional property photography that showcases homes and commercial spaces.
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            {/* Motion */}
+            <Link href="/motion" className="group">
+              <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="h-64 bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                  <div className="text-white text-center">
+                    <svg className="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"/>
+                    </svg>
+                    <h4 className="text-2xl font-bold">Motion</h4>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-600 group-hover:text-gray-800 transition-colors">
+                    Dynamic motion photography capturing movement, sports, and action sequences.
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
+
+        {/* Call to Action */}
+        <section className="text-center bg-gray-50 rounded-lg p-12">
+          <h3 className="text-3xl font-bold text-gray-900 mb-4">
+            Ready to Capture Your Vision?
+          </h3>
+          <p className="text-lg text-gray-600 mb-8">
+            Let's work together to create stunning photography that tells your story.
+          </p>
+          <Link 
+            href="/contact" 
+            className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+            Get In Touch
+          </Link>        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+      <Footer />
     </div>
   );
 }
