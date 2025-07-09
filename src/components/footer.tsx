@@ -36,7 +36,7 @@ export default function Footer() {
               <li>📱 (508) 776-8473</li>
               <li>📍 Boulder, CO | Cape Cod, MA</li>
             </ul>
-            <SocialLinks className="flex space-x-4 mt-4" />
+            <SocialLinks className="flex gap-2 mt-4" />
           </div>
         </div>
 

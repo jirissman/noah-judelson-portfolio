@@ -7,23 +7,23 @@ export default function HomePage() {
     {
       href: "/landscape",
       label: "Landscape",
-      description: "Breathtaking natural landscapes and scenic views",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-      alt: "Mountain landscape photography"
+      description: "Breathtaking scenic views",
+      image: "/static-images/DunesDesktop.JPG.jpeg",
+      alt: "Desert dunes landscape photography"
     },
     {
       href: "/real-estate",
       label: "Real Estate",
       description: "Professional property photography",
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2073&q=80",
-      alt: "Modern house exterior"
+      image: "/static-images/_DSC4845.JPG.jpeg",
+      alt: "Professional real estate photography"
     },
     {
       href: "/motion",
       label: "Motion",
       description: "Dynamic action and movement photography",
-      image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-      alt: "Racing car in motion"
+      image: "/static-images/_DSC4462-Enhanced-NR.JPEG",
+      alt: "Pickup truck with raised suspension"
     }
   ];
 
