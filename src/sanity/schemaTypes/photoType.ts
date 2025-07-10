@@ -5,14 +5,14 @@ export const photoType = defineType({
   title: 'Photo',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
       description: 'A title or caption for the photo.',
       validation: (Rule) => Rule.required(),
-    },
-    {
+    }),
+    defineField({
       name: 'image',
       title: 'Image',
       type: 'image',
@@ -20,24 +20,24 @@ export const photoType = defineType({
         hotspot: true,
       },
       fields: [
-        {
+        defineField({
           name: 'alt',
           type: 'string',
           title: 'Alternative Text',
           description: 'Important for SEO and accessibility.',
           validation: (Rule) => Rule.required(),
-        },
+        }),
       ],
       validation: (Rule) => Rule.required(),
-    },
-    {
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'reference',
       to: [{type: 'category'}],
       description: 'The category this photo belongs to.',
       validation: (Rule) => Rule.required(),
-    },
+    }),
   ],
   preview: {
     select: {

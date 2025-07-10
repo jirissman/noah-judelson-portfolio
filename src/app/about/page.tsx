@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Image from "next/image";
 
 export default function AboutPage() {
   return (
@@ -14,10 +15,12 @@ export default function AboutPage() {
             {/* Large portrait image */}
             <div className="order-2 lg:order-1">
               <div className="relative aspect-[3/4] w-full max-w-lg mx-auto lg:max-w-none">
-                <img 
+                <Image 
                   src="/static-images/_DSC4973.JPG.jpeg" 
                   alt="Noah Judelson - Professional Photographer"
                   className="w-full h-full object-cover rounded-lg shadow-2xl"
+                  width={600}
+                  height={800}
                 />
               </div>
             </div>
@@ -32,7 +35,7 @@ export default function AboutPage() {
                 
                 {/* Quote */}
                 <blockquote className="text-base md:text-lg italic text-gray-300 mb-8 leading-relaxed border-l-4 border-gray-600 pl-4">
-                  "If I could tell the story with words, I wouldn't need to lug around a camera."
+                  &ldquo;If I could tell the story with words, I wouldn&rsquo;t need to lug around a camera.&rdquo;
                   <footer className="text-sm font-normal mt-2 text-gray-400">
                     – Louis Hine
                   </footer>
@@ -41,19 +44,19 @@ export default function AboutPage() {
                 {/* Bio content */}
                 <div className="text-base md:text-lg leading-relaxed space-y-4 text-gray-200 my-20">
                   <p>
-                    I'm no poet, but I do love telling a story by capturing unique moments in time.
+                    I&rsquo;m no poet, but I do love telling a story by capturing unique moments in time.
                   </p>
                   
                   <p>
                     It all started when I was 16 visiting the Grand Canyon on a family vacation. I 
-                    was quickly frustrated when the images I snapped didn't do justice to the 
-                    incredible landscape in front of me. Since that trip, I've brought my camera 
+                    was quickly frustrated when the images I snapped didn&rsquo;t do justice to the 
+                    incredible landscape in front of me. Since that trip, I&rsquo;ve brought my camera 
                     along to capture my adventures along the coast, in the mountains, and on the 
                     streets of foreign cities.
                   </p>
                   
                   <p>
-                    Whether I'm documenting the raw beauty of natural landscapes, the architectural 
+                    Whether I&rsquo;m documenting the raw beauty of natural landscapes, the architectural 
                     elegance of real estate properties, or the dynamic energy of motion and action, 
                     my goal is always the same: to freeze moments that tell compelling stories and 
                     evoke genuine emotions.

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import SocialLinks from "./SocialLinks";
 import NavigationLinks from "./NavigationLinks";
 

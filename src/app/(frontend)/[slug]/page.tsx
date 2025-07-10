@@ -2,7 +2,6 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { PHOTO_QUERY } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function CategoryPage({
