@@ -184,7 +184,7 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes = Photo | Category | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ../nextjs-noah-judelson-portfolio/src/app/[slug]/page.tsx
+// Source: ./src/app/[slug]/page.tsx
 // Variable: PHOTO_QUERY
 // Query: *[    _type == "photo" &&    category->slug.current == $slug  ]{title, image}
 export type PHOTO_QUERYResult = Array<{
@@ -204,7 +204,7 @@ export type PHOTO_QUERYResult = Array<{
   } | null;
 }>;
 
-// Source: ../nextjs-noah-judelson-portfolio/src/app/page.tsx
+// Source: ./src/app/page.tsx
 // Variable: CATEGORY_QUERY
 // Query: *[  _type == "category"  && defined(slug.current)]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}
 export type CATEGORY_QUERYResult = Array<{

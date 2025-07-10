@@ -2,15 +2,10 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import imageUrlBuilder from "@sanity/image-url";
-import { defineQuery } from "next-sanity";
-import { sanityFetch } from "@/sanity/live";
-import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/lib/live";
+import { client } from "@/sanity/lib/client";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
-
-const CATEGORY_QUERY = defineQuery(`*[
-  _type == "category"
-  && defined(slug.current)
-]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}`);
+import { CATEGORY_QUERY } from "@/sanity/lib/queries";
 
 const { projectId, dataset } = client.config();
 const urlFor = (source: SanityImageSource) =>

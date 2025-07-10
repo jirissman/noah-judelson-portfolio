@@ -1,22 +1,9 @@
-import { client } from "@/sanity/client";
-import { sanityFetch } from "@/sanity/live";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import { defineQuery, PortableText } from "next-sanity";
+import { sanityFetch } from "@/sanity/lib/live";
+import { PHOTO_QUERY } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-const PHOTO_QUERY = defineQuery(`*[
-    _type == "photo" &&
-    category->slug.current == $slug
-  ]{title, image}`);
-
-const { projectId, dataset } = client.config();
-const urlFor = (source: SanityImageSource) =>
-  projectId && dataset
-    ? imageUrlBuilder({ projectId, dataset }).image(source)
-    : null;
 
 export default async function CategoryPage({
   params,
