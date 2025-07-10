@@ -206,7 +206,7 @@ export type CATEGORY_QUERYResult = Array<{
   } | null;
 }>;
 // Variable: PHOTO_QUERY
-// Query: *[    _type == "photo" &&    category->slug.current == $slug  ]{title, image}
+// Query: *[    _type == "photo" &&    category->slug.current == $slug  ]{    title,    image,    category->{      title,      description    }    }
 export type PHOTO_QUERYResult = Array<{
   title: string | null;
   image: {
@@ -222,6 +222,10 @@ export type PHOTO_QUERYResult = Array<{
     alt?: string;
     _type: "image";
   } | null;
+  category: {
+    title: string | null;
+    description: string | null;
+  } | null;
 }>;
 
 // Query TypeMap
@@ -229,6 +233,6 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[\n  _type == \"category\"\n  && defined(slug.current)\n]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}": CATEGORY_QUERYResult;
-    "*[\n    _type == \"photo\" &&\n    category->slug.current == $slug\n  ]{title, image}": PHOTO_QUERYResult;
+    "*[\n    _type == \"photo\" &&\n    category->slug.current == $slug\n  ]{\n    title,\n    image,\n    category->{\n      title,\n      description\n    }\n    }": PHOTO_QUERYResult;
   }
 }

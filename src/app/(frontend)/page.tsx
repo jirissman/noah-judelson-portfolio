@@ -1,21 +1,30 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import imageUrlBuilder from "@sanity/image-url";
 import { sanityFetch } from "@/sanity/lib/live";
-import { client } from "@/sanity/lib/client";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { CATEGORY_QUERY } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
 
-const { projectId, dataset } = client.config();
-const urlFor = (source: SanityImageSource) =>
-  projectId && dataset
-    ? imageUrlBuilder({ projectId, dataset }).image(source)
-    : null;
 
 export default async function HomePage() {
   const { data: categories } = await sanityFetch({ query: CATEGORY_QUERY });
-
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+  if (!categories || categories.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold">No categories found</h1>
+        <p className="mt-2 text-gray-600">
+          Please check your Sanity configuration or add some categories.
+        </p>
+        <p className="mt-2 text-gray-500">
+          Project ID: {projectId}
+          <br />
+          Dataset: {dataset}
+        </p>
+      </div>
+    );
+  }
   const backupPhotos = [
     {
       image: "/static-images/_DSC4845.JPG.jpeg",
