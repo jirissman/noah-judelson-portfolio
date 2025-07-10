@@ -1,5 +1,5 @@
 import type { StructureResolver } from "sanity/structure";
-import { TagIcon, ImageIcon } from "@sanity/icons";
+import { TagIcon, ImageIcon, UserIcon } from "@sanity/icons";
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -9,4 +9,14 @@ export const structure: StructureResolver = (S) =>
     .items([
       S.documentTypeListItem("category").title("Categories").icon(TagIcon),
       S.documentTypeListItem("photo").title("Photos").icon(ImageIcon),
+      S.documentTypeListItem("about")
+        .title("About")
+        .icon(UserIcon)
+        .child(
+          S.editor()
+            .id("aboutEditor")
+            .schemaType("about")
+            .documentId("about")
+            .title("Edit About Page"),
+        ),
     ]);

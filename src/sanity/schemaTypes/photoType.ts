@@ -25,7 +25,15 @@ export const photoType = defineType({
           type: "string",
           title: "Alternative Text",
           description: "Important for SEO and accessibility.",
-          validation: (Rule) => Rule.required(),
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              // Only require alt text if an image is uploaded
+              const parent = context.parent as { asset?: { _ref: string } };
+              if (parent?.asset?._ref && !value) {
+                return "Alt text is required when an image is uploaded";
+              }
+              return true;
+            }),
         }),
       ],
       validation: (Rule) => Rule.required(),

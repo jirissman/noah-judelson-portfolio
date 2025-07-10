@@ -23,13 +23,23 @@ export const aboutType = defineType({
       title: "Image",
       type: "image",
       validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "active",
-      title: "Active",
-      type: "boolean",
-      initialValue: false,
-      description: "Set to true to make this About section active.",
+      fields: [
+        defineField({
+          name: "alt",
+          type: "string",
+          title: "Alternative Text",
+          description: "Important for SEO and accessibility.",
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              // Only require alt text if an image is uploaded
+              const parent = context.parent as { asset?: { _ref: string } };
+              if (parent?.asset?._ref && !value) {
+                return "Alt text is required when an image is uploaded";
+              }
+              return true;
+            }),
+        }),
+      ],
     }),
   ],
 });

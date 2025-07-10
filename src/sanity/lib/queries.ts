@@ -11,8 +11,7 @@ export const PHOTO_QUERY = defineQuery(`*[
   ]{title, image}`);
 
 export const ABOUT_QUERY = defineQuery(`*[
-  _type == "about" &&
-  active == true
+  _type == "about"
 ][0]{
   title,
   body,

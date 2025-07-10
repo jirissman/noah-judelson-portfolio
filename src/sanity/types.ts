@@ -99,9 +99,9 @@ export type About = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   };
-  active?: boolean;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -278,7 +278,7 @@ export type PHOTO_QUERYResult = Array<{
   } | null;
 }>;
 // Variable: ABOUT_QUERY
-// Query: *[  _type == "about" &&  active == true][0]{  title,  body,  image,}
+// Query: *[  _type == "about"][0]{  title,  body,  image,}
 export type ABOUT_QUERYResult = {
   title: string | null;
   body: Array<{
@@ -309,6 +309,7 @@ export type ABOUT_QUERYResult = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   } | null;
 } | null;
@@ -319,6 +320,6 @@ declare module "@sanity/client" {
   interface SanityQueries {
     '*[\n  _type == "category"\n  && defined(slug.current)\n]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}': CATEGORY_QUERYResult;
     '*[\n    _type == "photo" &&\n    category->slug.current == $slug\n  ]{title, image}': PHOTO_QUERYResult;
-    '*[\n  _type == "about" &&\n  active == true\n][0]{\n  title,\n  body,\n  image,\n}': ABOUT_QUERYResult;
+    '*[\n  _type == "about"\n][0]{\n  title,\n  body,\n  image,\n}': ABOUT_QUERYResult;
   }
 }
