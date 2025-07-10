@@ -7,11 +7,11 @@ interface NavigationLinksProps {
   layout?: "list" | "flex";
 }
 
-export default function NavigationLinks({ 
-  className = "space-y-2", 
+export default function NavigationLinks({
+  className = "space-y-2",
   linkClassName = "text-gray-400 hover:text-white",
   type = "all",
-  layout = "list"
+  layout = "list",
 }: NavigationLinksProps) {
   const mainLinks = [
     { href: "/", label: "Home" },

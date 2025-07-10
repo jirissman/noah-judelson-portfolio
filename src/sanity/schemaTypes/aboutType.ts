@@ -1,24 +1,28 @@
 import { defineType, defineField } from "sanity";
 
-export const photoType = defineType({
-  name: "photo",
-  title: "Photo",
+export const aboutType = defineType({
+  name: "about",
+  title: "About",
   type: "document",
   fields: [
     defineField({
       name: "title",
       title: "Title",
       type: "string",
-      description: "A title or caption for the photo.",
-      validation: (Rule) => Rule.required(),
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "body",
+      title: "Body",
+      type: "array",
+      of: [{ type: "block" }],
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "image",
       title: "Image",
       type: "image",
-      options: {
-        hotspot: true,
-      },
+      validation: (rule) => rule.required(),
       fields: [
         defineField({
           name: "alt",
@@ -36,30 +40,6 @@ export const photoType = defineType({
             }),
         }),
       ],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "category",
-      title: "Category",
-      type: "reference",
-      to: [{ type: "category" }],
-      description: "The category this photo belongs to.",
-      validation: (Rule) => Rule.required(),
     }),
   ],
-  preview: {
-    select: {
-      title: "title",
-      category: "category.title",
-      media: "image",
-    },
-    prepare(selection) {
-      const { title, category, media } = selection;
-      return {
-        title: title,
-        subtitle: `in ${category || "Uncategorized"}`,
-        media: media,
-      };
-    },
-  },
 });

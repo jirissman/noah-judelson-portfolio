@@ -1,7 +1,10 @@
-import type {DefaultDocumentNodeResolver} from 'sanity/structure'
-import DocumentsPane from 'sanity-plugin-documents-pane'
+import type { DefaultDocumentNodeResolver } from "sanity/structure";
+import DocumentsPane from "sanity-plugin-documents-pane";
 
-export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
+export const defaultDocumentNode: DefaultDocumentNodeResolver = (
+  S,
+  { schemaType },
+) => {
   switch (schemaType) {
     case `category`:
       return S.document().views([
@@ -10,12 +13,12 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}
           .component(DocumentsPane)
           .options({
             query: `*[_type == "photo" && references($id)]`,
-            params: {id: `_id`},
-            options: {perspective: 'previewDrafts'}
+            params: { id: `_id` },
+            options: { perspective: "previewDrafts" },
           })
-          .title('Photos'),
-      ])
+          .title("Photos"),
+      ]);
     default:
-      return S.document().views([S.view.form()])
+      return S.document().views([S.view.form()]);
   }
-}
+};

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { EmptyContent } from "@/components/MissingPage";
 import imageUrlBuilder from "@sanity/image-url";
 import { sanityFetch } from "@/sanity/lib/live";
 import { client } from "@/sanity/lib/client";
@@ -15,6 +16,16 @@ const urlFor = (source: SanityImageSource) =>
 
 export default async function HomePage() {
   const { data: categories } = await sanityFetch({ query: CATEGORY_QUERY });
+
+  // Handle case where no categories exist
+  if (!categories || categories.length === 0) {
+    return (
+      <EmptyContent
+        contentType="Photo Categories"
+        createHref="/studio/structure/category"
+      />
+    );
+  }
 
   const backupPhotos = [
     {
@@ -35,7 +46,7 @@ export default async function HomePage() {
     <div className="scroll-container">
       <Header />
       {/* Horizontal category panels */}
-      <main className="pt-0 flex h-screen">
+      <main className="flex h-screen pt-0">
         {categories.map((category, index) => (
           <Link
             key={`${category._id}`}
@@ -43,7 +54,7 @@ export default async function HomePage() {
             className="group block flex-1"
           >
             <section
-              className="relative w-full h-full bg-cover bg-center bg-no-repeat flex items-center justify-center transition-transform duration-700 group-hover:scale-105"
+              className="relative flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105"
               style={{
                 backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(
                 ${
@@ -55,17 +66,17 @@ export default async function HomePage() {
               }}
             >
               {/* Category content overlay */}
-              <div className="text-center text-white z-10 transform transition-all duration-500 group-hover:scale-110 px-4">
-                <h2 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 tracking-wide">
+              <div className="z-10 transform px-4 text-center text-white transition-all duration-500 group-hover:scale-110">
+                <h2 className="mb-4 text-2xl font-bold tracking-wide sm:text-4xl md:text-6xl">
                   {category.title}
                 </h2>
-                <p className="text-sm sm:text-lg md:text-xl font-light max-w-lg mx-auto opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="mx-auto max-w-lg text-sm font-light opacity-90 transition-opacity duration-300 group-hover:opacity-100 sm:text-lg md:text-xl">
                   {category.description}
                 </p>
               </div>
 
               {/* Gradient overlay for better text readability */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none"></div>
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40"></div>
             </section>
           </Link>
         ))}
