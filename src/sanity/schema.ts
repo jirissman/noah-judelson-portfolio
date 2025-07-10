@@ -4,7 +4,7 @@ import { categoryType } from "./schemaTypes/categoryType";
 import { pageType } from "./schemaTypes/pageType";
 import { pageBuilderType } from "./schemaTypes/pageBuilderType";
 import { photoType } from "./schemaTypes/photoType";
-import { photosType } from "./schemaTypes/blocks/photosType";
+import { photoGalleryType } from "./schemaTypes/blocks/photoGalleryType";
 import { heroType } from "./schemaTypes/blocks/heroType";
 import { splitImageType } from "./schemaTypes/blocks/splitImageType";
 import { contactType } from "./schemaTypes/contactType";
@@ -20,7 +20,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     pageType,
     pageBuilderType,
     photoType,
-    photosType,
+    photoGalleryType,
     splitImageType,
   ],
 };

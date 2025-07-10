@@ -5,8 +5,18 @@ export const pageBuilderType = defineType({
   type: "array",
   of: [
     defineArrayMember({ type: "hero" }),
-    defineArrayMember({ type: "photos" }),
+    defineArrayMember({ type: "photoGallery" }),
     defineArrayMember({ type: "splitImage" }),
     defineArrayMember({ type: "contact" }),
   ],
+  options: {
+    insertMenu: {
+      views: [
+        {
+          name: "grid",
+          previewImageUrl: (schemaType) => `/block-previews/${schemaType}.png`,
+        },
+      ],
+    },
+  },
 });
