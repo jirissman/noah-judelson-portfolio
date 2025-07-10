@@ -9,3 +9,12 @@ export const PHOTO_QUERY = defineQuery(`*[
     _type == "photo" &&
     category->slug.current == $slug
   ]{title, image}`);
+
+export const ABOUT_QUERY = defineQuery(`*[
+  _type == "about" &&
+  active == true
+][0]{
+  title,
+  body,
+  image,
+}`);
