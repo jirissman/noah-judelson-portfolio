@@ -8,4 +8,5 @@ export const client = createClient({
   apiVersion,
   useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
   token, // Use this for authenticated requests, e.g., for preview mode
+  stega: { studioUrl: "/studio" },
 });
