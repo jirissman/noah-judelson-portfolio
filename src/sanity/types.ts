@@ -184,27 +184,7 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes = Photo | Category | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./src/app/[slug]/page.tsx
-// Variable: PHOTO_QUERY
-// Query: *[    _type == "photo" &&    category->slug.current == $slug  ]{title, image}
-export type PHOTO_QUERYResult = Array<{
-  title: string | null;
-  image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  } | null;
-}>;
-
-// Source: ./src/app/page.tsx
+// Source: ./src/sanity/lib/queries.ts
 // Variable: CATEGORY_QUERY
 // Query: *[  _type == "category"  && defined(slug.current)]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}
 export type CATEGORY_QUERYResult = Array<{
@@ -225,12 +205,30 @@ export type CATEGORY_QUERYResult = Array<{
     _type: "image";
   } | null;
 }>;
+// Variable: PHOTO_QUERY
+// Query: *[    _type == "photo" &&    category->slug.current == $slug  ]{title, image}
+export type PHOTO_QUERYResult = Array<{
+  title: string | null;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[\n    _type == \"photo\" &&\n    category->slug.current == $slug\n  ]{title, image}": PHOTO_QUERYResult;
     "*[\n  _type == \"category\"\n  && defined(slug.current)\n]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}": CATEGORY_QUERYResult;
+    "*[\n    _type == \"photo\" &&\n    category->slug.current == $slug\n  ]{title, image}": PHOTO_QUERYResult;
   }
 }
