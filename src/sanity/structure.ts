@@ -5,7 +5,7 @@ import { TagIcon, ImageIcon, UserIcon } from "@sanity/icons";
 export const structure: StructureResolver = (S) =>
   S.list()
     .id("root")
-    .title("Content")
+    .title("Portfolio")
     .items([
       S.documentTypeListItem("category").title("Categories").icon(TagIcon),
       S.documentTypeListItem("photo").title("Photos").icon(ImageIcon),
@@ -19,4 +19,11 @@ export const structure: StructureResolver = (S) =>
             .documentId("about")
             .title("Edit About Page"),
         ),
+      S.divider(),
+      S.documentTypeListItem("page").title("Pages"),
+      ...S.documentTypeListItems().filter(
+        (item) =>
+          item.getId() &&
+          !["photo", "category", "about", "page"].includes(item.getId()!),
+      ),
     ]);
