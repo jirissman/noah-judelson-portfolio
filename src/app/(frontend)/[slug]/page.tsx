@@ -1,20 +1,27 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import { PHOTO_QUERY } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
+import { EmptyContent } from "@/components/MissingPage";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 
 export default async function CategoryPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const resolvedParams = await params;
   const { data: photos } = await sanityFetch({
     query: PHOTO_QUERY,
-    params: await params,
+    params: resolvedParams,
   });
+
   if (!photos || photos.length === 0) {
-    notFound();
+    return (
+      <EmptyContent
+        contentType={`Photos for "${resolvedParams.slug}"`}
+        createHref={`/studio/structure/photo`}
+      />
+    );
   }
 
   const photoImageUrl = photos[0]?.image
@@ -23,7 +30,7 @@ export default async function CategoryPage({
 
   return (
     <main className="container mx-auto grid gap-12 p-12">
-      <div className="grid items-top gap-12 sm:grid-cols-2">
+      <div className="items-top grid gap-12 sm:grid-cols-2">
         <Image
           src={photoImageUrl || "https://placehold.co/550x310/png"}
           alt={photos[0]?.image?.alt || "Professional photograph"}

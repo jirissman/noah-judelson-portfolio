@@ -16,11 +16,7 @@ export function About(props: NonNullable<ABOUT_QUERYResult>) {
             <div className="relative mx-auto aspect-[3/4] w-full max-w-lg lg:max-w-none">
               <Image
                 src={urlFor(image).width(600).height(800).url()}
-                alt={
-                  title
-                    ? `${title} - Professional Photographer`
-                    : "Professional Photographer"
-                }
+                alt={image.alt ? `${image.alt}` : "Professional Photographer"}
                 className="h-full w-full rounded-lg object-cover shadow-2xl"
                 width={600}
                 height={800}
