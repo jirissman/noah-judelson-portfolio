@@ -31,8 +31,8 @@ export type SplitImage = {
   };
 };
 
-export type Photos = {
-  _type: "photos";
+export type PhotoGallery = {
+  _type: "photoGallery";
   title?: string;
   photos?: Array<{
     _ref: string;
@@ -77,7 +77,7 @@ export type PageBuilder = Array<
     } & Hero)
   | ({
       _key: string;
-    } & Photos)
+    } & PhotoGallery)
   | ({
       _key: string;
     } & SplitImage)
@@ -453,7 +453,7 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes =
   | SplitImage
-  | Photos
+  | PhotoGallery
   | Photo
   | PageBuilder
   | Page
@@ -549,6 +549,150 @@ export type ABOUT_QUERYResult = {
     _type: "image";
   } | null;
 } | null;
+// Variable: PAGE_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{  ...,  content[]{    ...,    _type == "photoGallery" => {      ...,      photoGallery[]->    }  }}
+export type PAGE_QUERYResult = {
+  _id: string;
+  _type: "page";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  content: Array<
+    | {
+        title?: string;
+        body?: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: "span";
+                _key: string;
+              }>;
+              style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+              listItem?: "bullet";
+              markDefs?: Array<{
+                href?: string;
+                _type: "link";
+                _key: string;
+              }>;
+              level?: number;
+              _type: "block";
+              _key: string;
+            }
+          | {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              _key: string;
+            }
+        >;
+        _type: "contact";
+        _key: string;
+      }
+    | {
+        _key: string;
+        _type: "hero";
+        title?: string;
+        text?: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>;
+                text?: string;
+                _type: "span";
+                _key: string;
+              }>;
+              style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+              listItem?: "bullet";
+              markDefs?: Array<{
+                href?: string;
+                _type: "link";
+                _key: string;
+              }>;
+              level?: number;
+              _type: "block";
+              _key: string;
+            }
+          | {
+              asset?: {
+                _ref: string;
+                _type: "reference";
+                _weak?: boolean;
+                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+              };
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              _key: string;
+            }
+        >;
+        image?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+      }
+    | {
+        _key: string;
+        _type: "photoGallery";
+        title?: string;
+        photos?: Array<{
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          _key: string;
+          [internalGroqTypeReferenceTo]?: "photo";
+        }>;
+        photoGallery: null;
+      }
+    | {
+        _key: string;
+        _type: "splitImage";
+        orientation?: "imageLeft" | "imageRight";
+        title?: string;
+        image?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+        };
+      }
+  > | null;
+  mainImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+} | null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -557,5 +701,6 @@ declare module "@sanity/client" {
     '*[\n  _type == "category"\n  && defined(slug.current)\n]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}': CATEGORY_QUERYResult;
     '*[\n    _type == "photo" &&\n    category->slug.current == $slug\n  ]{title, image}': PHOTO_QUERYResult;
     '*[\n  _type == "about"\n][0]{\n  title,\n  body,\n  image,\n}': ABOUT_QUERYResult;
+    '*[_type == "page" && slug.current == $slug][0]{\n  ...,\n  content[]{\n    ...,\n    _type == "photoGallery" => {\n      ...,\n      photoGallery[]->\n    }\n  }\n}': PAGE_QUERYResult;
   }
 }

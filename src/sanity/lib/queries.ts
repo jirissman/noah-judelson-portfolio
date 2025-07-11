@@ -17,3 +17,15 @@ export const ABOUT_QUERY = defineQuery(`*[
   body,
   image,
 }`);
+
+export const PAGE_QUERY =
+  defineQuery(`*[_type == "page" && slug.current == $slug][0]{
+  ...,
+  content[]{
+    ...,
+    _type == "photoGallery" => {
+      ...,
+      photoGallery[]->
+    }
+  }
+}`);

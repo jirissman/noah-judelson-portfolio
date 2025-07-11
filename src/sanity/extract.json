@@ -109,7 +109,7 @@
     }
   },
   {
-    "name": "photos",
+    "name": "photoGallery",
     "type": "type",
     "value": {
       "type": "object",
@@ -118,7 +118,7 @@
           "type": "objectAttribute",
           "value": {
             "type": "string",
-            "value": "photos"
+            "value": "photoGallery"
           }
         },
         "title": {
@@ -360,7 +360,7 @@
             },
             "rest": {
               "type": "inline",
-              "name": "photos"
+              "name": "photoGallery"
             }
           },
           {
