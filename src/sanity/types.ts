@@ -13,34 +13,6 @@
  */
 
 // Source: schema.json
-export type Photo = {
-  _id: string;
-  _type: "photo";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  category?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "category";
-  };
-};
-
 export type Category = {
   _id: string;
   _type: "category";
@@ -62,6 +34,20 @@ export type Category = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  photos?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    _key: string;
+  }>;
 };
 
 export type About = {
@@ -223,7 +209,6 @@ export type SanityAssetSourceData = {
 };
 
 export type AllSanitySchemaTypes =
-  | Photo
   | Category
   | About
   | SanityImagePaletteSwatch
@@ -261,22 +246,7 @@ export type CATEGORY_QUERYResult = Array<{
 }>;
 // Variable: PHOTO_QUERY
 // Query: *[    _type == "photo" &&    category->slug.current == $slug  ]{title, image}
-export type PHOTO_QUERYResult = Array<{
-  title: string | null;
-  image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  } | null;
-}>;
+export type PHOTO_QUERYResult = Array<never>;
 // Variable: ABOUT_QUERY
 // Query: *[  _type == "about"][0]{  title,  body,  image,}
 export type ABOUT_QUERYResult = {
