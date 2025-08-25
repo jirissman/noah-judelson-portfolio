@@ -32,6 +32,7 @@ export type Category = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   };
   photos?: Array<{
@@ -241,12 +242,26 @@ export type CATEGORY_QUERYResult = Array<{
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   } | null;
 }>;
 // Variable: PHOTO_QUERY
-// Query: *[    _type == "photo" &&    category->slug.current == $slug  ]{title, image}
-export type PHOTO_QUERYResult = Array<never>;
+// Query: *[    _type == "category" &&    slug.current == $slug  ][0].photos
+export type PHOTO_QUERYResult = Array<{
+  asset?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+  };
+  media?: unknown;
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: "image";
+  _key: string;
+}> | null;
 // Variable: ABOUT_QUERY
 // Query: *[  _type == "about"][0]{  title,  body,  image,}
 export type ABOUT_QUERYResult = {
@@ -289,7 +304,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[\n  _type == "category"\n  && defined(slug.current)\n]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}': CATEGORY_QUERYResult;
-    '*[\n    _type == "photo" &&\n    category->slug.current == $slug\n  ]{title, image}': PHOTO_QUERYResult;
+    '*[\n    _type == "category" &&\n    slug.current == $slug\n  ][0].photos': PHOTO_QUERYResult;
     '*[\n  _type == "about"\n][0]{\n  title,\n  body,\n  image,\n}': ABOUT_QUERYResult;
   }
 }
