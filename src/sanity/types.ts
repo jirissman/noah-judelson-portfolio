@@ -13,34 +13,6 @@
  */
 
 // Source: schema.json
-export type Photo = {
-  _id: string;
-  _type: "photo";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  category?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "category";
-  };
-};
-
 export type Category = {
   _id: string;
   _type: "category";
@@ -60,8 +32,23 @@ export type Category = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   };
+  photos?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    _key: string;
+  }>;
 };
 
 export type About = {
@@ -223,7 +210,6 @@ export type SanityAssetSourceData = {
 };
 
 export type AllSanitySchemaTypes =
-  | Photo
   | Category
   | About
   | SanityImagePaletteSwatch
@@ -256,27 +242,42 @@ export type CATEGORY_QUERYResult = Array<{
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
-  } | null;
-}>;
-// Variable: PHOTO_QUERY
-// Query: *[    _type == "photo" &&    category->slug.current == $slug  ]{title, image}
-export type PHOTO_QUERYResult = Array<{
-  title: string | null;
-  image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
     alt?: string;
     _type: "image";
   } | null;
 }>;
+// Variable: PHOTO_QUERY
+// Query: *[    _type == "category" &&    slug.current == $slug  ][0].photos[]{    ...,    asset->{      ...,      metadata    }  }
+export type PHOTO_QUERYResult = Array<{
+  asset: {
+    _id: string;
+    _type: "sanity.imageAsset";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    originalFilename?: string;
+    label?: string;
+    title?: string;
+    description?: string;
+    altText?: string;
+    sha1hash?: string;
+    extension?: string;
+    mimeType?: string;
+    size?: number;
+    assetId?: string;
+    uploadId?: string;
+    path?: string;
+    url?: string;
+    metadata: SanityImageMetadata | null;
+    source?: SanityAssetSourceData;
+  } | null;
+  media?: unknown;
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: "image";
+  _key: string;
+}> | null;
 // Variable: ABOUT_QUERY
 // Query: *[  _type == "about"][0]{  title,  body,  image,}
 export type ABOUT_QUERYResult = {
@@ -319,7 +320,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[\n  _type == "category"\n  && defined(slug.current)\n]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}': CATEGORY_QUERYResult;
-    '*[\n    _type == "photo" &&\n    category->slug.current == $slug\n  ]{title, image}': PHOTO_QUERYResult;
+    '*[\n    _type == "category" &&\n    slug.current == $slug\n  ][0].photos[]{\n    ...,\n    asset->{\n      ...,\n      metadata\n    }\n  }': PHOTO_QUERYResult;
     '*[\n  _type == "about"\n][0]{\n  title,\n  body,\n  image,\n}': ABOUT_QUERYResult;
   }
 }

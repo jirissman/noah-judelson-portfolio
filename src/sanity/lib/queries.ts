@@ -6,9 +6,15 @@ export const CATEGORY_QUERY = defineQuery(`*[
 ]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}`);
 
 export const PHOTO_QUERY = defineQuery(`*[
-    _type == "photo" &&
-    category->slug.current == $slug
-  ]{title, image}`);
+    _type == "category" &&
+    slug.current == $slug
+  ][0].photos[]{
+    ...,
+    asset->{
+      ...,
+      metadata
+    }
+  }`);
 
 export const ABOUT_QUERY = defineQuery(`*[
   _type == "about"

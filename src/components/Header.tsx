@@ -3,18 +3,18 @@ import SocialLinks from "./SocialLinks";
 
 export default function Header() {
   return (
-    <header className="fixed top-4 left-4 right-4 md:left-8 md:right-8 z-50">
-      <div className="flex flex-col md:flex-row justify-between items-center py-4">
+    <header className="absolute top-4 right-4 left-4 z-50 bg-transparent md:right-8 md:left-8">
+      <div className="flex flex-col items-center justify-between py-4 md:flex-row">
         {/* Name section - left side */}
         <div className="mb-6 md:mb-0">
           <h2 className="text-4xl font-bold text-white drop-shadow-lg">
             Noah Judelson
           </h2>
-          <p className="text-gray-100 mt-2 drop-shadow-md">Photography</p>
+          <p className="mt-2 text-gray-100 drop-shadow-md">Photography</p>
         </div>
 
         {/* Navigation and Social Links - right side */}
-        <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 gap-6">
+        <div className="flex flex-col items-center gap-6 space-y-6 md:flex-row md:space-y-0">
           <NavigationLinks
             type="main"
             className="flex gap-4"

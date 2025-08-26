@@ -1,5 +1,3 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { About } from "@/components/About";
 import { PageNotSetup } from "@/components/MissingPage";
 import { sanityFetch } from "@/sanity/lib/live";
@@ -13,14 +11,10 @@ export default async function AboutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Header />
-
-      <main className="px-4 pt-32 pb-16 md:px-8">
+    <div className="bg-black text-white">
+      <div className="px-4 pt-32 pb-16 md:px-8">
         <About {...about} />
-      </main>
-
-      <Footer />
+      </div>
     </div>
   );
 }
