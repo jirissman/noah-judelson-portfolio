@@ -8,7 +8,13 @@ export const CATEGORY_QUERY = defineQuery(`*[
 export const PHOTO_QUERY = defineQuery(`*[
     _type == "category" &&
     slug.current == $slug
-  ][0].photos`);
+  ][0].photos[]{
+    ...,
+    asset->{
+      ...,
+      metadata
+    }
+  }`);
 
 export const ABOUT_QUERY = defineQuery(`*[
   _type == "about"
