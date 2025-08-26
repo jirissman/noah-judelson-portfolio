@@ -1,6 +1,4 @@
 import Link from "next/link";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { EmptyContent } from "@/components/MissingPage";
 import imageUrlBuilder from "@sanity/image-url";
 import { sanityFetch } from "@/sanity/lib/live";
@@ -44,7 +42,6 @@ export default async function HomePage() {
 
   return (
     <div className="scroll-container">
-      <Header />
       {/* Horizontal category panels */}
       <main className="flex h-screen pt-0">
         {categories.map((category, index) => (
@@ -81,9 +78,6 @@ export default async function HomePage() {
           </Link>
         ))}
       </main>
-
-      {/* Footer appears below the panels */}
-      <Footer />
     </div>
   );
 }
