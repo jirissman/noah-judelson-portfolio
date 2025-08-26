@@ -1,8 +1,7 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import { PHOTO_QUERY } from "@/sanity/lib/queries";
-import { urlFor } from "@/sanity/lib/image";
 import { EmptyContent } from "@/components/MissingPage";
-import Image from "next/image";
+import PhotoGallery from "@/components/PhotoGallery";
 
 export default async function CategoryPage({
   params,
@@ -25,21 +24,11 @@ export default async function CategoryPage({
     );
   }
 
-  const photoImageUrl = photos[0]
-    ? urlFor(photos[0])?.width(550).height(310).url()
-    : null;
-
   return (
-    <main className="container mx-auto grid gap-12 p-12">
-      <div className="items-top grid gap-12 sm:grid-cols-2">
-        <Image
-          src={photoImageUrl || "https://placehold.co/550x310/png"}
-          alt={photos[0]?.alt || `${category} photograph`}
-          className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
-          height={310}
-          width={550}
-        />
+    <div className="bg-black text-white">
+      <div className="px-4 pt-32 pb-16 md:px-8">
+        <PhotoGallery photos={photos} category={category} />
       </div>
-    </main>
+    </div>
   );
 }
