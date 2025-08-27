@@ -6,7 +6,7 @@ import {
   UseNextSanityImageOptions,
 } from "next-sanity-image";
 import Image, { ImageProps } from "next/image";
-import { publicClient } from "@/sanity/lib/publicClient";
+import { publicClient } from "@/sanity/lib/client";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 type ImageVariant =
@@ -97,6 +97,9 @@ const VARIANT_CONFIGS: Record<
     quality: 85,
   },
 };
+
+const DEFAULT_BLUR_DATA =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkrHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bK";
 
 /**
  * Creates image options based on variant and custom overrides
@@ -239,7 +242,7 @@ const SanityImage = React.forwardRef<HTMLImageElement, SanityImageProps>(
         : undefined;
 
     // Default blur placeholder
-    const defaultBlurDataURL = DEFAULT_BLUR_DATA_URL;
+    const defaultBlurDataURL = DEFAULT_BLUR_DATA;
 
     return (
       <Image
@@ -277,7 +280,10 @@ export function useSanityImageVariants<T extends Record<string, VariantConfig>>(
   variants: T,
 ): Record<keyof T, SanityImageData | null> {
   // Get the keys in a stable order
-  const variantKeys = React.useMemo(() => Object.keys(variants) as (keyof T)[], [variants]);
+  const variantKeys = React.useMemo(
+    () => Object.keys(variants) as (keyof T)[],
+    [variants],
+  );
 
   // Compute image options for each variant
   const imageOptionsList = React.useMemo(

@@ -10,3 +10,11 @@ export const client = createClient({
   token, // Use this for authenticated requests, e.g., for preview mode
   stega: { studioUrl: "/studio" },
 });
+
+export const publicClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: true,
+  // No token - this is for public access only
+});
