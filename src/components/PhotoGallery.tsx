@@ -1,12 +1,10 @@
 "use client";
 
 import React from "react";
-import { useNextSanityImage } from "next-sanity-image";
-import Image from "next/image";
-import { publicClient } from "@/sanity/lib/publicClient";
 import { PHOTO_QUERYResult } from "@/sanity/types";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
+import SanityImage, { useSanityImageVariants } from "./SanityImage";
 
 interface PhotoGalleryProps {
   photos: PHOTO_QUERYResult;
@@ -20,33 +18,32 @@ interface PhotoItemProps {
 }
 
 function PhotoItem({ photo, category, index }: PhotoItemProps) {
-  // Call hooks at the top level of this component
-  const imageProps = useNextSanityImage(publicClient, photo);
-  const thumbnailProps = useNextSanityImage(publicClient, photo, {
-    imageBuilder: (builder) => builder.width(400),
-  });
-  const originalProps = useNextSanityImage(publicClient, photo, {
-    imageBuilder: (builder) => builder.width(1200).quality(90),
+  // Use the new simplified hook to get multiple image variants
+  const { display, thumbnail, original } = useSanityImageVariants(photo, {
+    display: { variant: "gallery" }, // 800px width, auto height
+    thumbnail: { width: 400 }, // Custom 400px width
+    original: { width: 1200, quality: 90 }, // High-quality large image
   });
 
-  // Handle potential null values
-  if (!imageProps || !thumbnailProps || !originalProps) {
+  // Handle case where image generation fails
+  if (!display || !thumbnail || !original) {
     return null;
   }
 
   return (
     <Item
       key={photo._key || index}
-      original={originalProps.src}
-      thumbnail={thumbnailProps.src}
-      width={originalProps.width}
-      height={originalProps.height}
+      original={original.src}
+      thumbnail={thumbnail.src}
+      width={original.width}
+      height={original.height}
     >
       {({ ref, open }) => (
-        <Image
+        <SanityImage
           ref={ref}
           onClick={open}
-          {...imageProps}
+          image={photo}
+          variant="gallery"
           alt={photo.alt || `${category} photograph ${index + 1}`}
           style={{
             width: "100%",
@@ -55,11 +52,7 @@ function PhotoItem({ photo, category, index }: PhotoItemProps) {
             cursor: "pointer",
           }}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          placeholder="blur"
-          blurDataURL={
-            photo.asset?.metadata?.lqip ||
-            "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkrHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bK"
-          }
+          showBlurPlaceholder={true}
         />
       )}
     </Item>

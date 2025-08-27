@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# sanity
+.sanity
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
@@ -44,3 +47,6 @@ next-env.d.ts
 *.jpeg
 *.jpg
 *.png
+
+# build output
+/dist
