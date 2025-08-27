@@ -277,30 +277,46 @@ export function useSanityImageVariants<T extends Record<string, VariantConfig>>(
   image: SanityImageSource,
   variants: T,
 ): Record<keyof T, SanityImageData | null> {
-  const results = {} as Record<keyof T, SanityImageData | null>;
+  // Get the keys in a stable order
+  const variantKeys = React.useMemo(() => Object.keys(variants) as (keyof T)[], [variants]);
 
-  for (const [key, config] of Object.entries(variants)) {
-    const imageOptions = createImageOptions(
-      config.variant,
-      config.width,
-      config.height,
-      config.quality,
-      config.fit,
-      config.crop,
-      config.imageOptions,
-    );
+  // Compute image options for each variant
+  const imageOptionsList = React.useMemo(
+    () =>
+      variantKeys.map((key) =>
+        createImageOptions(
+          variants[key]?.variant,
+          variants[key]?.width,
+          variants[key]?.height,
+          variants[key]?.quality,
+          variants[key]?.fit,
+          variants[key]?.crop,
+          variants[key]?.imageOptions,
+        ),
+      ),
+    [variantKeys, variants],
+  );
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const imageProps = useNextSanityImage(publicClient, image, imageOptions);
-    results[key as keyof T] = imageProps
-      ? {
-          src: imageProps.src,
-          width: imageProps.width,
-          height: imageProps.height,
-        }
-      : null;
-  }
+  // Call useNextSanityImage for each variant key in a fixed order
+  const images = variantKeys.map((key, idx) =>
+    useNextSanityImage(publicClient, image, imageOptionsList[idx]),
+  );
 
+  // Build the result object
+  const results = React.useMemo(() => {
+    const out = {} as Record<keyof T, SanityImageData | null>;
+    variantKeys.forEach((key, idx) => {
+      const imageProps = images[idx];
+      out[key] = imageProps
+        ? {
+            src: imageProps.src,
+            width: imageProps.width,
+            height: imageProps.height,
+          }
+        : null;
+    });
+    return out;
+  }, [variantKeys, images]);
   return results;
 }
 
