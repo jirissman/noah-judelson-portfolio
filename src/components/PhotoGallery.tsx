@@ -54,6 +54,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ galleryData }) => {
                   width: "100%",
                   height: "auto",
                   paddingBottom: "1rem",
+                  cursor: "pointer",
                 }}
               />
             )}

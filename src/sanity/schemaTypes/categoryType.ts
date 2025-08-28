@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { SliderInput, SliderInputProps } from "../components/SliderInput";
 
 export const categoryType = defineType({
   name: "category",
@@ -90,9 +91,21 @@ export const categoryType = defineType({
       name: "columnWidth",
       type: "number",
       title: "Column Width",
-      description: "The width of each column in the photo gallery (in pixels).",
+      description: "The width of each column in the photo gallery.",
       initialValue: 400,
       validation: (rule) => rule.required().min(100).max(800),
+      components: {
+        input: SliderInput,
+      },
+      options: {
+        slider: {
+          min: 100,
+          max: 800,
+          step: 10,
+          showValue: true,
+          suffix: "px",
+        },
+      } as SliderInputProps["schemaType"]["options"],
     }),
   ],
   preview: {
