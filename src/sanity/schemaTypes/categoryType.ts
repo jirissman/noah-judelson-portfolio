@@ -102,7 +102,6 @@ export const categoryType = defineType({
           min: 100,
           max: 800,
           step: 10,
-          showValue: true,
           suffix: "px",
         },
       } as SliderInputProps["schemaType"]["options"],
