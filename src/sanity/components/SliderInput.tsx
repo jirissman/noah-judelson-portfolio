@@ -13,7 +13,7 @@ export interface SliderInputProps extends NumberInputProps {
   schemaType: NumberInputProps["schemaType"] & {
     options?: {
       slider?: SliderOptions;
-    } & Record<string, any>;
+    };
   };
 }
 
