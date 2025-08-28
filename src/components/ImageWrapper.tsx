@@ -19,16 +19,29 @@ import { projectId, dataset } from "@/sanity/env";
  * ```
  */
 export const Image = React.forwardRef<HTMLImageElement, WrapperProps<"img">>(
-  (props, ref) => (
-    <SanityImage
-      {...props}
-      as={React.forwardRef<HTMLImageElement>((imgProps, imgRef) => (
-        <img {...imgProps} ref={ref || imgRef} />
-      ))}
-      projectId={projectId}
-      dataset={dataset}
-    />
-  ),
+  (props, ref) => {
+    const ImgComponent = React.forwardRef<HTMLImageElement>(
+      (imgProps, imgRef) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          {...(imgProps as React.ImgHTMLAttributes<HTMLImageElement>)}
+          ref={ref || imgRef}
+        />
+      ),
+    );
+    ImgComponent.displayName = "ImgComponent";
+
+    return (
+      <SanityImage
+        {...props}
+        as={ImgComponent}
+        projectId={projectId}
+        dataset={dataset}
+      />
+    );
+  },
 );
+
+Image.displayName = "Image";
 
 export default Image;
