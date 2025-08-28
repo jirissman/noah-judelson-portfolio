@@ -58,7 +58,7 @@ export function SliderInput(props: SliderInputProps) {
             appearance: "none",
             cursor: readOnly ? "default" : "pointer",
           }}
-          className="[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[var(--card-fg-color)] focus:[&::-moz-range-thumb]:bg-[var(--card-focus-ring-color)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--card-fg-color)] focus:[&::-webkit-slider-thumb]:bg-[var(--card-focus-ring-color)]"
+          className="range-slider"
         />
       </Box>
       <TextInput
@@ -73,7 +73,7 @@ export function SliderInput(props: SliderInputProps) {
           width: "calc(var(--spacing) * 15)",
           textAlign: "center" as const,
         }}
-        className="[&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+        className="number-input-no-spinner"
       />
       <span
         style={{
