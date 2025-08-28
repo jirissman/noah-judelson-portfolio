@@ -17,26 +17,11 @@ export default async function HomePage() {
     );
   }
 
-  const backupPhotos = [
-    {
-      image: "/static-images/_DSC4845.JPG.jpeg",
-      alt: "A person standing in a ravine of red rock",
-    },
-    {
-      image: "/static-images/_DSC4716.JPG.jpeg",
-      alt: "A car on a cliff overlooking a canyon",
-    },
-    {
-      image: "/static-images/_DSC5605.JPEG",
-      alt: "Woman standing on a cliff overlooking a lake high up in the mountains",
-    },
-  ];
-
   return (
     <div className="scroll-container">
       {/* Horizontal category panels */}
       <main className="flex h-screen pt-0">
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           <Link
             key={`${category._id}`}
             href={`/${category?.slug?.current}`}
@@ -45,12 +30,11 @@ export default async function HomePage() {
             <section className="relative flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105">
               {/* Background image */}
               <Image
-                id={category?.photo?.id!}
+                id={category.photo!.id!}
                 alt={
-                  category?.photo?.alt ||
-                  `${category?.slug?.current} cover photo`
+                  category.photo!.alt || `${category.slug?.current} cover photo`
                 }
-                preview={category?.photo?.preview!}
+                preview={category.photo!.preview!}
                 className="absolute top-0 left-0 z-1 h-full w-full object-cover select-none"
                 width={1400}
               />
