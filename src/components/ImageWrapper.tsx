@@ -24,7 +24,7 @@ export const Image = React.forwardRef<HTMLImageElement, WrapperProps<"img">>(
   (props, ref) => {
     const ImgComponent = React.forwardRef<HTMLImageElement>(
       (imgProps, imgRef) => (
-        // eslint-disable-next-line @next/next/no-img-element
+        // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
         <img
           {...(imgProps as React.ImgHTMLAttributes<HTMLImageElement>)}
           ref={ref || imgRef}
