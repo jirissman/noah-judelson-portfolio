@@ -221,6 +221,13 @@
           }
         },
         "optional": true
+      },
+      "columnWidth": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
       }
     }
   },
