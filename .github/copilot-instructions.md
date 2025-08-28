@@ -34,23 +34,20 @@ NEXT_PUBLIC_SANITY_API_VERSION=2025-07-10
 
 ### Development Workflow
 
-- `npm run dev` -- includes type generation, takes ~1 minute total. NEVER CANCEL.
-- Alternative if predev fails: `npx next dev --turbopack` -- starts in ~965ms. NEVER CANCEL.
+- `npm run dev` -- includes full Sanity schema extraction and type generation, takes ~1 minute total. NEVER CANCEL.
 - Access: http://localhost:3000 (main site), http://localhost:3000/studio (Sanity Studio)
-
-**Note**: If `npm run dev` fails during schema extraction due to network restrictions, use the alternative command. The application will still function fully with existing schemas.
+- Fallback (if needed): `npx next dev --turbopack` -- starts in ~965ms without prebuild steps. NEVER CANCEL.
 
 ### Build Process
 
 - `npm run build` -- takes ~45 seconds plus typegen time. NEVER CANCEL. Set timeout to 120+ seconds.
-- Includes prebuild type generation and static site generation
-- Alternative if prebuild fails: `npx sanity typegen generate && npx next build` -- generates types from existing schema then builds
+- Includes prebuild type generation with full Sanity schema extraction and static site generation
 
 ### Type Generation
 
-- Full process: `npm run typegen` -- extracts schema from Sanity then generates types. May fail on extraction due to network restrictions.
-- Types only: `npx sanity typegen generate` -- uses existing `src/sanity/extract.json`, ~2.8 seconds. **Recommended approach.**
-- Schema extraction: `npx sanity schema extract --path=./src/sanity/extract.json` -- may fail due to network restrictions but not required since schema exists
+- Full process: `npm run typegen` -- extracts schema from Sanity then generates types, ~10 seconds. **Primary method.**
+- Types only: `npx sanity typegen generate` -- uses existing `src/sanity/extract.json`, ~2.8 seconds.
+- Schema extraction: `npx sanity schema extract --path=./src/sanity/extract.json` -- extracts latest schema from Sanity API
 
 ### Production
 
@@ -81,7 +78,7 @@ After making changes, run this complete validation:
 npm install                    # ~2-4 seconds
 npm run lint                   # ~2.3 seconds
 npx prettier --write .         # Fix formatting
-npx next dev --turbopack       # Start dev server (~965ms)
+npm run dev                    # Start dev server with full Sanity integration (~1 minute)
 ```
 
 Then manually test both main site (/) and studio (/studio) routes.
@@ -92,8 +89,8 @@ Then manually test both main site (/) and studio (/studio) routes.
 
 - Edit schema files in `src/sanity/schemaTypes/`
 - Update `src/sanity/schema.ts` if adding new types
-- Regenerate types: `npx sanity typegen generate` (uses existing schema, recommended)
-- Alternative: `npm run typegen` (may fail on schema extraction but not required)
+- Regenerate types: `npm run typegen` (extracts latest schema and generates types)
+- Alternative: `npx sanity typegen generate` (uses existing schema)
 - Restart dev server to see changes
 
 ### Component Development
@@ -149,25 +146,15 @@ src/
 
 ## Known Issues and Workarounds
 
-### Build Failures
+### Sanity v4 Migration Notice
 
-- **Issue**: `npm run build` fails during prebuild typegen
-- **Solution**: Use `npx sanity typegen generate && npx next build` to bypass network restrictions
-
-### Schema Extraction Failures
-
-- **Issue**: `npm run typegen` or schema extraction fails with network errors
-- **Solution**: Use `npx sanity typegen generate` - existing schema in `extract.json` is sufficient
-
-### Development Server Issues
-
-- **Issue**: `npm run dev` fails during predev typegen
-- **Solution**: Use `npx next dev --turbopack` to bypass predev script
+- **Notice**: Sanity package is moving to v4 on July 15, requires Node.js 20+
+- **Current setup**: Compatible with Node.js 20.19.4, no action needed
 
 ### Sanity Studio Loading
 
 - **Full functionality**: Studio loads and connects to Sanity project with environment credentials
-- **If connection issues**: Check that development server is running and visit http://localhost:3000/studio
+- **Access**: Visit http://localhost:3000/studio with development server running
 
 ## Security Notes
 
