@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { SanityImage, type WrapperProps } from "sanity-image";
 import { projectId, dataset } from "@/sanity/env";

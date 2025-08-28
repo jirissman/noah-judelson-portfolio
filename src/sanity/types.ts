@@ -227,24 +227,17 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: CATEGORY_QUERY
-// Query: *[  _type == "category"  && defined(slug.current)]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}
+// Query: *[  _type == "category"  && defined(slug.current)]|order(title asc)[0...3]{  _id, title, slug, description, "photo": coverPhoto{    "id": asset->_id,   "url": asset->url,   alt,   "preview": asset->metadata.lqip,  }  }
 export type CATEGORY_QUERYResult = Array<{
   _id: string;
   title: string | null;
   slug: Slug | null;
   description: string | null;
-  coverPhoto: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
+  photo: {
+    id: string | null;
+    url: string | null;
+    alt: string | null;
+    preview: string | null;
   } | null;
 }>;
 // Variable: PHOTO_QUERY
@@ -308,7 +301,7 @@ export type ABOUT_QUERYResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[\n  _type == "category"\n  && defined(slug.current)\n]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}': CATEGORY_QUERYResult;
+    '*[\n  _type == "category"\n  && defined(slug.current)\n]|order(title asc)[0...3]{\n  _id, title, slug, description, "photo": coverPhoto{\n    "id": asset->_id,\n   "url": asset->url,\n   alt,\n   "preview": asset->metadata.lqip,\n  }\n  }': CATEGORY_QUERYResult;
     '*[\n_type == "category" &&\nslug.current == $slug\n ][0]{\n  "category": {_id, title, columnWidth},\n  "photos": photos[]{\n   "id": asset->_id,\n   "url": asset->url,\n   alt,\n   "dimensions": asset->metadata.dimensions{\n    aspectRatio,\n    height,\n    width\n   },\n   "preview": asset->metadata.lqip,\n  }\n }': PHOTO_QUERYResult;
     '*[\n  _type == "about"\n][0]{\n  title,\n  body,\n  image,\n}': ABOUT_QUERYResult;
   }
