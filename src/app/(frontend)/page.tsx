@@ -1,16 +1,9 @@
 import Link from "next/link";
 import { EmptyContent } from "@/components/MissingPage";
-import imageUrlBuilder from "@sanity/image-url";
 import { sanityFetch } from "@/sanity/lib/live";
-import { client } from "@/sanity/lib/client";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { CATEGORY_QUERY } from "@/sanity/lib/queries";
-
-const { projectId, dataset } = client.config();
-const urlFor = (source: SanityImageSource) =>
-  projectId && dataset
-    ? imageUrlBuilder({ projectId, dataset }).image(source)
-    : null;
+import SanityImage from "@/components/SanityImage";
+import Image from "next/image";
 
 export default async function HomePage() {
   const { data: categories } = await sanityFetch({ query: CATEGORY_QUERY });
@@ -50,18 +43,28 @@ export default async function HomePage() {
             href={`/${category?.slug?.current}`}
             className="group block flex-1"
           >
-            <section
-              className="relative flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105"
-              style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(
-                ${
-                  category?.coverPhoto
-                    ? urlFor(category.coverPhoto)?.url() || ""
-                    : backupPhotos[index % backupPhotos.length].image
-                }
-                )`,
-              }}
-            >
+            <section className="relative flex h-full w-full items-center justify-center overflow-hidden transition-transform duration-700 group-hover:scale-105">
+              {/* Background Image */}
+              {category?.coverPhoto ? (
+                <SanityImage
+                  image={category.coverPhoto}
+                  variant="fullscreen"
+                  alt={category.title || "Category background"}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <Image
+                  src={backupPhotos[index % backupPhotos.length].image}
+                  alt={backupPhotos[index % backupPhotos.length].alt}
+                  fill
+                  className="object-cover"
+                  priority={index < 2}
+                />
+              )}
+
+              {/* Dark overlay */}
+              <div className="absolute inset-0 bg-black/40"></div>
+
               {/* Category content overlay */}
               <div className="z-10 transform px-4 text-center text-white transition-all duration-500 group-hover:scale-110">
                 <h2 className="mb-4 text-2xl font-bold tracking-wide sm:text-4xl md:text-6xl">
