@@ -35,5 +35,10 @@ export const ABOUT_QUERY = defineQuery(`*[
 ][0]{
   title,
   body,
-  image,
+  image{
+    "id": asset->_id,
+   "url": asset->url,
+   alt,
+   "preview": asset->metadata.lqip,
+  },
 }`);
