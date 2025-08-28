@@ -4,8 +4,8 @@ This is a [Sanity.io](https://sanity.io) and [Next.js](https://nextjs.org) proje
 
 ## Technologies Used
 
-*   **Next.js:** A React framework for building fast and scalable web applications.
-*   **Sanity.io:** A headless CMS for managing and delivering content.
+- **Next.js:** A React framework for building fast and scalable web applications.
+- **Sanity.io:** A headless CMS for managing and delivering content.
 
 ## Purpose
 
