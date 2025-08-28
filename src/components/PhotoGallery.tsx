@@ -63,4 +63,6 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ galleryData }) => {
       </div>
     </Gallery>
   );
-}
+};
+
+export default PhotoGallery;
