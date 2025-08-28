@@ -9,14 +9,41 @@ import Image, { ImageProps } from "next/image";
 import { publicClient } from "@/sanity/lib/client";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
+// Constants to avoid magic numbers
+const IMAGE_QUALITY = {
+  LOW: 75,
+  MEDIUM: 85,
+  HIGH: 90,
+  MAXIMUM: 95,
+} as const;
+
+const IMAGE_DIMENSIONS = {
+  THUMBNAIL: { width: 300, height: 300 },
+  CARD: { width: 400, height: 250 },
+  GALLERY: { width: 800 },
+  HERO: { width: 1920, height: 800 },
+  FULLSCREEN: { width: 2400 },
+  AVATAR: { width: 150, height: 150 },
+  BANNER: { width: 1200, height: 300 },
+} as const;
+
+const DEFAULT_QUALITY = IMAGE_QUALITY.MEDIUM;
+const DEFAULT_FIT = "crop" as const;
+const DEFAULT_CROP = "center" as const;
+const DEFAULT_ALT = "Image";
+
+// Simple base64 placeholder for blur effect
+const BLUR_PLACEHOLDER =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkrHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bK";
+
 type ImageVariant =
-  | "thumbnail" // 300x300 crop
-  | "card" // 400x250 crop
-  | "gallery" // 800px width, auto height
-  | "hero" // 1920x800 crop
-  | "fullscreen" // 2400px width, auto height
-  | "avatar" // 150x150 crop
-  | "banner"; // 1200x300 crop
+  | "thumbnail"
+  | "card"
+  | "gallery"
+  | "hero"
+  | "fullscreen"
+  | "avatar"
+  | "banner";
 
 type ImageFit = "crop" | "clip" | "fill" | "fillmax" | "max" | "scale" | "min";
 type ImageCrop =
@@ -29,13 +56,13 @@ type ImageCrop =
   | "entropy";
 
 interface SanityImageProps
-  extends Omit<ImageProps, "src" | "width" | "height"> {
+  extends Omit<ImageProps, "src" | "width" | "height" | "alt"> {
   /** The Sanity image asset reference */
   image: SanityImageSource;
-
+  /** Required alt text for accessibility */
+  alt: string;
   /** Predefined image variants for common use cases */
   variant?: ImageVariant;
-
   /** Custom width (overrides variant width) */
   width?: number;
   /** Custom height (overrides variant height) */
@@ -46,27 +73,11 @@ interface SanityImageProps
   fit?: ImageFit;
   /** Crop position when using fit="crop" */
   crop?: ImageCrop;
-
-  /** Advanced: Custom image options (overrides all other transform props) */
-  imageOptions?: UseNextSanityImageOptions;
-
-  /** Fallback alt text if not provided in the image */
-  fallbackAlt?: string;
-  /** Custom CSS classes */
-  className?: string;
-  /** Custom inline styles */
-  style?: React.CSSProperties;
   /** Whether to show a blur placeholder while loading */
   showBlurPlaceholder?: boolean;
 }
 
-interface SanityImageData {
-  src: string;
-  width: number;
-  height: number;
-}
-
-// Predefined variant configurations
+// Variant configurations using semantic constants
 const VARIANT_CONFIGS: Record<
   ImageVariant,
   {
@@ -74,82 +85,91 @@ const VARIANT_CONFIGS: Record<
     height?: number;
     fit?: ImageFit;
     crop?: ImageCrop;
-    quality?: number;
+    quality: number;
   }
 > = {
   thumbnail: {
-    width: 300,
-    height: 300,
-    fit: "crop",
-    crop: "center",
-    quality: 80,
+    ...IMAGE_DIMENSIONS.THUMBNAIL,
+    fit: DEFAULT_FIT,
+    crop: DEFAULT_CROP,
+    quality: IMAGE_QUALITY.LOW,
   },
-  card: { width: 400, height: 250, fit: "crop", crop: "center", quality: 85 },
-  gallery: { width: 800, quality: 85 },
-  hero: { width: 1920, height: 800, fit: "crop", crop: "center", quality: 90 },
-  fullscreen: { width: 2400, quality: 95 },
-  avatar: { width: 150, height: 150, fit: "crop", crop: "center", quality: 85 },
+  card: {
+    ...IMAGE_DIMENSIONS.CARD,
+    fit: DEFAULT_FIT,
+    crop: DEFAULT_CROP,
+    quality: DEFAULT_QUALITY,
+  },
+  gallery: {
+    ...IMAGE_DIMENSIONS.GALLERY,
+    quality: DEFAULT_QUALITY,
+  },
+  hero: {
+    ...IMAGE_DIMENSIONS.HERO,
+    fit: DEFAULT_FIT,
+    crop: DEFAULT_CROP,
+    quality: IMAGE_QUALITY.HIGH,
+  },
+  fullscreen: {
+    ...IMAGE_DIMENSIONS.FULLSCREEN,
+    quality: IMAGE_QUALITY.MAXIMUM,
+  },
+  avatar: {
+    ...IMAGE_DIMENSIONS.AVATAR,
+    fit: DEFAULT_FIT,
+    crop: DEFAULT_CROP,
+    quality: DEFAULT_QUALITY,
+  },
   banner: {
-    width: 1200,
-    height: 300,
-    fit: "crop",
-    crop: "center",
-    quality: 85,
+    ...IMAGE_DIMENSIONS.BANNER,
+    fit: DEFAULT_FIT,
+    crop: DEFAULT_CROP,
+    quality: DEFAULT_QUALITY,
   },
 };
 
-const DEFAULT_BLUR_DATA =
-  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkrHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bK";
-
 /**
- * Creates image options based on variant and custom overrides
+ * Creates image transformation options based on variant and custom overrides
  */
-function createImageOptions(
+function buildImageOptions(
   variant?: ImageVariant,
   customWidth?: number,
   customHeight?: number,
   quality?: number,
   fit?: ImageFit,
   crop?: ImageCrop,
-  customImageOptions?: UseNextSanityImageOptions,
 ): UseNextSanityImageOptions {
-  // If custom imageOptions provided, use them directly
-  if (customImageOptions) {
-    return customImageOptions;
-  }
+  // Get base config from variant or use sensible defaults
+  const baseConfig = variant ? VARIANT_CONFIGS[variant] : {
+    width: IMAGE_DIMENSIONS.GALLERY.width,
+    quality: DEFAULT_QUALITY,
+  };
 
-  // Get base config from variant or use defaults
-  const baseConfig = variant
-    ? VARIANT_CONFIGS[variant]
-    : { width: 800, quality: 85 };
-
-  // Override with custom values
-  const finalConfig = {
+  // Build final configuration with custom overrides
+  const config = {
     width: customWidth ?? baseConfig.width,
     height: customHeight ?? baseConfig.height,
-    quality: quality ?? baseConfig.quality,
+    quality: quality ?? baseConfig.quality ?? DEFAULT_QUALITY,
     fit: fit ?? baseConfig.fit,
     crop: crop ?? baseConfig.crop,
   };
 
   return {
     imageBuilder: (builder) => {
-      let imageBuilder = builder.width(finalConfig.width);
+      let imageBuilder = builder.width(config.width);
 
-      if (finalConfig.height) {
-        imageBuilder = imageBuilder.height(finalConfig.height);
+      if (config.height) {
+        imageBuilder = imageBuilder.height(config.height);
       }
 
-      if (finalConfig.quality) {
-        imageBuilder = imageBuilder.quality(finalConfig.quality);
+      imageBuilder = imageBuilder.quality(config.quality);
+
+      if (config.fit) {
+        imageBuilder = imageBuilder.fit(config.fit);
       }
 
-      if (finalConfig.fit) {
-        imageBuilder = imageBuilder.fit(finalConfig.fit);
-      }
-
-      if (finalConfig.crop) {
-        imageBuilder = imageBuilder.crop(finalConfig.crop);
+      if (config.crop) {
+        imageBuilder = imageBuilder.crop(config.crop);
       }
 
       return imageBuilder;
@@ -158,104 +178,91 @@ function createImageOptions(
 }
 
 /**
- * A highly reusable component that wraps Next.js Image with Sanity image optimization
+ * Extracts blur placeholder from Sanity image metadata
+ */
+function getBlurPlaceholder(image: SanityImageSource): string | undefined {
+  if (!image || typeof image !== "object" || !("asset" in image)) {
+    return undefined;
+  }
+
+  const asset = image.asset;
+  if (!asset || typeof asset !== "object" || !("metadata" in asset)) {
+    return undefined;
+  }
+
+  const metadata = asset.metadata;
+  return metadata && typeof metadata === "object" && "lqip" in metadata
+    ? (metadata.lqip as string)
+    : undefined;
+}
+
+/**
+ * A simplified Sanity image component that wraps Next.js Image with Sanity optimization
  *
  * @example
  * // Simple usage with variant
- * <SanityImage
- *   image={photo}
- *   variant="thumbnail"
- *   alt="Photo description"
- * />
+ * <SanityImage image={photo} variant="thumbnail" alt="Photo description" />
  *
  * @example
  * // Custom dimensions
- * <SanityImage
- *   image={photo}
- *   width={600}
- *   height={400}
- *   fit="crop"
- *   crop="center"
- *   alt="Custom sized image"
- * />
- *
- * @example
- * // Hero image
- * <SanityImage
- *   image={photo}
- *   variant="hero"
- *   alt="Hero banner"
- *   className="w-full h-screen object-cover"
+ * <SanityImage 
+ *   image={photo} 
+ *   width={600} 
+ *   height={400} 
+ *   fit="crop" 
+ *   alt="Custom sized image" 
  * />
  */
 const SanityImage = React.forwardRef<HTMLImageElement, SanityImageProps>(
   (
     {
       image,
+      alt,
       variant,
       width,
       height,
       quality,
       fit,
       crop,
-      imageOptions,
-      fallbackAlt = "Image",
-      className,
-      style,
       showBlurPlaceholder = true,
-      alt,
       ...imageProps
     },
     ref,
   ) => {
-    // Create image options based on variant and custom props
-    const finalImageOptions = createImageOptions(
+    // Build image transformation options
+    const imageOptions = buildImageOptions(
       variant,
       width,
       height,
       quality,
       fit,
       crop,
-      imageOptions,
     );
 
-    // Generate the image props using useNextSanityImage
+    // Generate optimized image props
     const sanityImageProps = useNextSanityImage(
       publicClient,
       image,
-      finalImageOptions,
+      imageOptions,
     );
 
-    // Handle case where image generation fails
+    // Handle missing image gracefully
     if (!sanityImageProps) {
       return null;
     }
 
-    // Extract metadata for blur placeholder
-    const imageAsset =
-      image && typeof image === "object" && "asset" in image
-        ? image.asset
-        : null;
-    const lqip =
-      imageAsset && typeof imageAsset === "object" && "metadata" in imageAsset
-        ? imageAsset.metadata?.lqip
-        : undefined;
-
-    // Default blur placeholder
-    const defaultBlurDataURL = DEFAULT_BLUR_DATA;
+    // Get blur placeholder if enabled
+    const lqip = showBlurPlaceholder ? getBlurPlaceholder(image) : undefined;
+    const blurDataURL = lqip || BLUR_PLACEHOLDER;
 
     return (
       <Image
         ref={ref}
         {...sanityImageProps}
         {...imageProps}
-        alt={alt || fallbackAlt}
-        className={className}
-        style={style}
+        alt={alt}
         placeholder={showBlurPlaceholder ? "blur" : undefined}
-        blurDataURL={
-          showBlurPlaceholder ? lqip || defaultBlurDataURL : undefined
-        }
+        blurDataURL={showBlurPlaceholder ? blurDataURL : undefined}
       />
     );
   },
@@ -265,72 +272,4 @@ SanityImage.displayName = "SanityImage";
 
 export default SanityImage;
 
-/**
- * Hook to get multiple image variants from a single Sanity image with clean API
- *
- * @example
- * const { thumbnail, display, fullSize } = useSanityImageVariants(photo, {
- *   thumbnail: { variant: 'thumbnail' },
- *   display: { variant: 'gallery' },
- *   fullSize: { width: 1600, quality: 90 }
- * });
- */
-export function useSanityImageVariants<T extends Record<string, VariantConfig>>(
-  image: SanityImageSource,
-  variants: T,
-): Record<keyof T, SanityImageData | null> {
-  // Get the keys in a stable order
-  const variantKeys = React.useMemo(
-    () => Object.keys(variants) as (keyof T)[],
-    [variants],
-  );
 
-  // Compute image options for each variant
-  const imageOptionsList = React.useMemo(
-    () =>
-      variantKeys.map((key) =>
-        createImageOptions(
-          variants[key]?.variant,
-          variants[key]?.width,
-          variants[key]?.height,
-          variants[key]?.quality,
-          variants[key]?.fit,
-          variants[key]?.crop,
-          variants[key]?.imageOptions,
-        ),
-      ),
-    [variantKeys, variants],
-  );
-
-  // Call useNextSanityImage for each variant key in a fixed order
-  const images = variantKeys.map((key, idx) =>
-    useNextSanityImage(publicClient, image, imageOptionsList[idx]),
-  );
-
-  // Build the result object
-  const results = React.useMemo(() => {
-    const out = {} as Record<keyof T, SanityImageData | null>;
-    variantKeys.forEach((key, idx) => {
-      const imageProps = images[idx];
-      out[key] = imageProps
-        ? {
-            src: imageProps.src,
-            width: imageProps.width,
-            height: imageProps.height,
-          }
-        : null;
-    });
-    return out;
-  }, [variantKeys, images]);
-  return results;
-}
-
-interface VariantConfig {
-  variant?: ImageVariant;
-  width?: number;
-  height?: number;
-  quality?: number;
-  fit?: ImageFit;
-  crop?: ImageCrop;
-  imageOptions?: UseNextSanityImageOptions;
-}

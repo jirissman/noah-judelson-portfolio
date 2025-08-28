@@ -4,7 +4,8 @@ import React from "react";
 import { PHOTO_QUERYResult } from "@/sanity/types";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
-import SanityImage, { useSanityImageVariants } from "./SanityImage";
+import SanityImage from "./SanityImage";
+import { urlFor } from "@/sanity/lib/image";
 
 interface PhotoGalleryProps {
   photos: PHOTO_QUERYResult;
@@ -18,25 +19,17 @@ interface PhotoItemProps {
 }
 
 function PhotoItem({ photo, category, index }: PhotoItemProps) {
-  // Use the new simplified hook to get multiple image variants
-  const { display, thumbnail, original } = useSanityImageVariants(photo, {
-    display: { variant: "gallery" }, // 800px width, auto height
-    thumbnail: { width: 400 }, // Custom 400px width
-    original: { width: 1200, quality: 90 }, // High-quality large image
-  });
-
-  // Handle case where image generation fails
-  if (!display || !thumbnail || !original) {
-    return null;
-  }
+  // Generate URLs for photoswipe
+  const thumbnailUrl = urlFor(photo).width(400).quality(85).url();
+  const originalUrl = urlFor(photo).width(1200).quality(90).url();
 
   return (
     <Item
       key={photo._key || index}
-      original={original.src}
-      thumbnail={thumbnail.src}
-      width={original.width}
-      height={original.height}
+      original={originalUrl}
+      thumbnail={thumbnailUrl}
+      width={1200}
+      height={800} // Reasonable default, will be adjusted by photoswipe
     >
       {({ ref, open }) => (
         <SanityImage
