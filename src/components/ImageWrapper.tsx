@@ -30,3 +30,5 @@ export const Image = React.forwardRef<HTMLImageElement, WrapperProps<"img">>(
     />
   ),
 );
+
+export default Image;

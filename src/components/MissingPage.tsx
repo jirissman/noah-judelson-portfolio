@@ -24,6 +24,7 @@ interface MissingPageProps {
   description: string;
   actionText: string;
   actionHref: string;
+  message?: string;
   icon?: string;
   variant?: "error" | "empty";
 }
@@ -33,6 +34,7 @@ export default function MissingPage({
   description,
   actionText,
   actionHref,
+  message,
   icon = "⚠️",
   variant = "error",
 }: MissingPageProps) {
@@ -75,6 +77,7 @@ export default function MissingPage({
         >
           {actionText}
         </Link>
+        {message && <p className="mt-6 text-gray-400">{message}</p>}
       </div>
     </div>
   );
@@ -102,9 +105,11 @@ export function PageNotSetup({
 export function EmptyContent({
   contentType,
   createHref,
+  message,
 }: {
   contentType: string;
   createHref: string;
+  message?: string;
 }) {
   return (
     <MissingPage
@@ -112,6 +117,7 @@ export function EmptyContent({
       description={`There are no ${contentType.toLowerCase()} to display yet.`}
       actionText={`Add ${contentType}`}
       actionHref={createHref}
+      message={message}
       icon="📂"
       variant="empty"
     />

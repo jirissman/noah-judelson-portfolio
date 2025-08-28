@@ -9,7 +9,7 @@ export const PHOTO_QUERY = defineQuery(`*[
 _type == "category" &&
 slug.current == $slug
  ][0]{
-  "category": {_id, title},
+  "category": {_id, title, columnWidth},
   "photos": photos[]{
    "id": asset->_id,
    "url": asset->url,

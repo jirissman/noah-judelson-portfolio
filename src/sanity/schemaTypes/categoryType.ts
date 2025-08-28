@@ -86,6 +86,14 @@ export const categoryType = defineType({
         layout: "grid",
       },
     }),
+    defineField({
+      name: "columnWidth",
+      type: "number",
+      title: "Column Width",
+      description: "The width of each column in the photo gallery (in pixels).",
+      initialValue: 400,
+      validation: (rule) => rule.required().min(100).max(800),
+    }),
   ],
   preview: {
     select: {
