@@ -54,8 +54,17 @@ export default async function HomePage() {
                 className="absolute top-0 left-0 z-1 h-full w-full object-cover select-none"
                 width={1400}
               />
+              {/* Gradient overlay for better text readability */}
+              <div
+                className="pointer-events-none absolute inset-0 z-5"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 120% 60% at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 80%)",
+                }}
+              ></div>
+
               {/* Category content overlay */}
-              <div className="z-10 transform px-4 text-center text-white transition-all duration-500 group-hover:scale-110">
+              <div className="relative z-10 transform px-4 text-center text-white transition-all duration-500 group-hover:scale-110">
                 <h2 className="mb-4 text-2xl font-bold tracking-wide sm:text-4xl md:text-6xl">
                   {category.title}
                 </h2>
@@ -63,9 +72,6 @@ export default async function HomePage() {
                   {category.description}
                 </p>
               </div>
-
-              {/* Gradient overlay for better text readability */}
-              <div className="pointer-events-none absolute inset-0 z-5 bg-gradient-to-b from-black/20 via-transparent to-black/40"></div>
             </section>
           </Link>
         ))}
