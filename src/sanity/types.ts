@@ -49,6 +49,7 @@ export type Category = {
     _type: "image";
     _key: string;
   }>;
+  columnWidth?: number;
 };
 
 export type About = {
@@ -226,60 +227,41 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: CATEGORY_QUERY
-// Query: *[  _type == "category"  && defined(slug.current)]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}
+// Query: *[  _type == "category"  && defined(slug.current)]|order(title asc)[0...3]{  _id, title, slug, description, "photo": coverPhoto{    "id": asset->_id,   "url": asset->url,   alt,   "preview": asset->metadata.lqip,  }  }
 export type CATEGORY_QUERYResult = Array<{
   _id: string;
   title: string | null;
   slug: Slug | null;
   description: string | null;
-  coverPhoto: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
+  photo: {
+    id: string | null;
+    url: string | null;
+    alt: string | null;
+    preview: string | null;
   } | null;
 }>;
 // Variable: PHOTO_QUERY
-// Query: *[    _type == "category" &&    slug.current == $slug  ][0].photos[]{    ...,    asset->{      ...,      metadata    }  }
-export type PHOTO_QUERYResult = Array<{
-  asset: {
+// Query: *[_type == "category" &&slug.current == $slug ][0]{  "category": {_id, title, columnWidth},  "photos": photos[]{   "id": asset->_id,   "url": asset->url,   alt,   "dimensions": asset->metadata.dimensions{    aspectRatio,    height,    width   },   "preview": asset->metadata.lqip,  } }
+export type PHOTO_QUERYResult = {
+  category: {
     _id: string;
-    _type: "sanity.imageAsset";
-    _createdAt: string;
-    _updatedAt: string;
-    _rev: string;
-    originalFilename?: string;
-    label?: string;
-    title?: string;
-    description?: string;
-    altText?: string;
-    sha1hash?: string;
-    extension?: string;
-    mimeType?: string;
-    size?: number;
-    assetId?: string;
-    uploadId?: string;
-    path?: string;
-    url?: string;
-    metadata: SanityImageMetadata | null;
-    source?: SanityAssetSourceData;
-  } | null;
-  media?: unknown;
-  hotspot?: SanityImageHotspot;
-  crop?: SanityImageCrop;
-  alt?: string;
-  _type: "image";
-  _key: string;
-}> | null;
+    title: string | null;
+    columnWidth: number | null;
+  };
+  photos: Array<{
+    id: string | null;
+    url: string | null;
+    alt: string | null;
+    dimensions: {
+      aspectRatio: number | null;
+      height: number | null;
+      width: number | null;
+    } | null;
+    preview: string | null;
+  }> | null;
+} | null;
 // Variable: ABOUT_QUERY
-// Query: *[  _type == "about"][0]{  title,  body,  image,}
+// Query: *[  _type == "about"][0]{  title,  body,  image{    "id": asset->_id,   "url": asset->url,   alt,   "preview": asset->metadata.lqip,  },}
 export type ABOUT_QUERYResult = {
   title: string | null;
   body: Array<{
@@ -301,17 +283,10 @@ export type ABOUT_QUERYResult = {
     _key: string;
   }> | null;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
+    id: string | null;
+    url: string | null;
+    alt: string | null;
+    preview: string | null;
   } | null;
 } | null;
 
@@ -319,8 +294,8 @@ export type ABOUT_QUERYResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[\n  _type == "category"\n  && defined(slug.current)\n]|order(title asc)[0...3]{_id, title, slug, description, coverPhoto}': CATEGORY_QUERYResult;
-    '*[\n    _type == "category" &&\n    slug.current == $slug\n  ][0].photos[]{\n    ...,\n    asset->{\n      ...,\n      metadata\n    }\n  }': PHOTO_QUERYResult;
-    '*[\n  _type == "about"\n][0]{\n  title,\n  body,\n  image,\n}': ABOUT_QUERYResult;
+    '*[\n  _type == "category"\n  && defined(slug.current)\n]|order(title asc)[0...3]{\n  _id, title, slug, description, "photo": coverPhoto{\n    "id": asset->_id,\n   "url": asset->url,\n   alt,\n   "preview": asset->metadata.lqip,\n  }\n  }': CATEGORY_QUERYResult;
+    '*[\n_type == "category" &&\nslug.current == $slug\n ][0]{\n  "category": {_id, title, columnWidth},\n  "photos": photos[]{\n   "id": asset->_id,\n   "url": asset->url,\n   alt,\n   "dimensions": asset->metadata.dimensions{\n    aspectRatio,\n    height,\n    width\n   },\n   "preview": asset->metadata.lqip,\n  }\n }': PHOTO_QUERYResult;
+    '*[\n  _type == "about"\n][0]{\n  title,\n  body,\n  image{\n    "id": asset->_id,\n   "url": asset->url,\n   alt,\n   "preview": asset->metadata.lqip,\n  },\n}': ABOUT_QUERYResult;
   }
 }
