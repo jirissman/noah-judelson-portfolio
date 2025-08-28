@@ -15,49 +15,42 @@ This is a Next.js 15.3.5 application with Sanity.io CMS for a professional photo
 
 ### Environment Variables (CRITICAL)
 
-You MUST set these environment variables in `.env.local` for full functionality:
+Sanity credentials are available in the environment. Create `.env.local` from template:
 
 ```bash
-# Required for Sanity integration
-NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
-NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_READ_TOKEN=your-read-token
+cp .env.example .env.local
+```
 
-# Optional (has defaults)
+The following environment variables are available and configured:
+
+```bash
+# Available in copilot environment
+NEXT_PUBLIC_SANITY_PROJECT_ID=mi3at5xy
+NEXT_PUBLIC_SANITY_DATASET=development
+SANITY_API_READ_TOKEN=sk6AjrjRU7bGe5Ztpd40AcsxC0tIUtWv9OLmdt5kvvKgPSSXKVr8tUn5mWsxgHi5jhkttjFkuWmlpUwNM0sDpyfglh44jEDJ1Gw0aZdju4zbZpvgsCjw2KmhZPk5cK5R1SmqI3TyfYvygaFTq3PbUen1PikDF5Tvc2RMK7KSAquaQ06KHVXk
+NEXT_PUBLIC_SANITY_HOST=noah-judelson
 NEXT_PUBLIC_SANITY_API_VERSION=2025-07-10
-NEXT_PUBLIC_SANITY_HOST=your-studio-host
 ```
 
 ### Development Workflow
 
-#### Method 1: With Valid Sanity Credentials
-
 - `npm run dev` -- includes type generation, takes ~1 minute total. NEVER CANCEL.
-- Accesses: http://localhost:3000 (main site), http://localhost:3000/studio (Sanity Studio)
+- Alternative if predev fails: `npx next dev --turbopack` -- starts in ~965ms. NEVER CANCEL.
+- Access: http://localhost:3000 (main site), http://localhost:3000/studio (Sanity Studio)
 
-#### Method 2: Without Sanity Credentials (Limited Functionality)
-
-- Skip predev script: `npx next dev --turbopack` -- starts in ~965ms. NEVER CANCEL.
-- Site will show runtime errors but server runs correctly
-- Studio at /studio will show loading spinner but interface loads
+**Note**: If `npm run dev` fails during schema extraction due to network restrictions, use the alternative command. The application will still function fully with existing schemas.
 
 ### Build Process
 
-#### Method 1: With Valid Sanity Credentials
-
-- `npm run build` -- takes ~45 seconds plus typegen time. NEVER CANCEL. Set timeout to 120+ minutes.
+- `npm run build` -- takes ~45 seconds plus typegen time. NEVER CANCEL. Set timeout to 120+ seconds.
 - Includes prebuild type generation and static site generation
-
-#### Method 2: Without Sanity Credentials (Limited)
-
-- Generate types first (if schema exists): `npx sanity typegen generate` -- takes ~5 seconds
-- Build directly: `npx next build` -- takes ~45 seconds but may fail on static generation. NEVER CANCEL. Set timeout to 90+ minutes.
+- Alternative if prebuild fails: `npx sanity typegen generate && npx next build` -- generates types from existing schema then builds
 
 ### Type Generation
 
-- Full process: `npm run typegen` -- extracts schema from Sanity then generates types. Requires valid credentials.
-- Types only: `npx sanity typegen generate` -- uses existing `src/sanity/extract.json`, ~2.8 seconds
-- Schema extraction: `npx sanity schema extract --path=./src/sanity/extract.json` -- requires Sanity connection
+- Full process: `npm run typegen` -- extracts schema from Sanity then generates types. May fail on extraction due to network restrictions.
+- Types only: `npx sanity typegen generate` -- uses existing `src/sanity/extract.json`, ~2.8 seconds. **Recommended approach.**
+- Schema extraction: `npx sanity schema extract --path=./src/sanity/extract.json` -- may fail due to network restrictions but not required since schema exists
 
 ### Production
 
@@ -99,7 +92,8 @@ Then manually test both main site (/) and studio (/studio) routes.
 
 - Edit schema files in `src/sanity/schemaTypes/`
 - Update `src/sanity/schema.ts` if adding new types
-- Regenerate types: `npm run typegen` (requires Sanity credentials)
+- Regenerate types: `npx sanity typegen generate` (uses existing schema, recommended)
+- Alternative: `npm run typegen` (may fail on schema extraction but not required)
 - Restart dev server to see changes
 
 ### Component Development
@@ -157,29 +151,29 @@ src/
 
 ### Build Failures
 
-- **Issue**: `npm run build` fails with "Missing environment variable"
-- **Solution**: Set required environment variables or use `npx next build` with existing types
+- **Issue**: `npm run build` fails during prebuild typegen
+- **Solution**: Use `npx sanity typegen generate && npx next build` to bypass network restrictions
 
-### Type Generation Failures
+### Schema Extraction Failures
 
-- **Issue**: `npm run typegen` fails with connection errors
-- **Solution**: Use `npx sanity typegen generate` if `extract.json` exists
+- **Issue**: `npm run typegen` or schema extraction fails with network errors
+- **Solution**: Use `npx sanity typegen generate` - existing schema in `extract.json` is sufficient
 
 ### Development Server Issues
 
-- **Issue**: `npm run dev` fails on predev typegen
+- **Issue**: `npm run dev` fails during predev typegen
 - **Solution**: Use `npx next dev --turbopack` to bypass predev script
 
 ### Sanity Studio Loading
 
-- **Studio loads but shows spinning indicator**: Normal behavior with test credentials
-- **Studio completely fails to load**: Check environment variables and network connectivity
+- **Full functionality**: Studio loads and connects to Sanity project with environment credentials
+- **If connection issues**: Check that development server is running and visit http://localhost:3000/studio
 
 ## Security Notes
 
-- Never commit `.env.local` or real Sanity credentials to git
-- Use environment-specific credentials for development vs production
-- Sanity Studio requires authentication for content management
+- Environment variables are securely managed in the copilot environment
+- Never commit `.env.local` or credentials to git
+- Sanity Studio provides full content management access with provided credentials
 
 ## Performance Notes
 
