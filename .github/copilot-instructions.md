@@ -15,19 +15,19 @@ This is a Next.js 15.3.5 application with Sanity.io CMS for a professional photo
 
 ### Environment Variables (CRITICAL)
 
-Sanity credentials are available in the environment. Create `.env.local` from template:
+Sanity credentials are available in the copilot environment. Create `.env.local` from template:
 
 ```bash
 cp .env.example .env.local
 ```
 
-The following environment variables are available and configured:
+The following environment variables are available and configured in the copilot environment:
 
 ```bash
 # Available in copilot environment
 NEXT_PUBLIC_SANITY_PROJECT_ID=mi3at5xy
 NEXT_PUBLIC_SANITY_DATASET=development
-SANITY_API_READ_TOKEN=sk6AjrjRU7bGe5Ztpd40AcsxC0tIUtWv9OLmdt5kvvKgPSSXKVr8tUn5mWsxgHi5jhkttjFkuWmlpUwNM0sDpyfglh44jEDJ1Gw0aZdju4zbZpvgsCjw2KmhZPk5cK5R1SmqI3TyfYvygaFTq3PbUen1PikDF5Tvc2RMK7KSAquaQ06KHVXk
+SANITY_API_READ_TOKEN=[configured securely]
 NEXT_PUBLIC_SANITY_HOST=noah-judelson
 NEXT_PUBLIC_SANITY_API_VERSION=2025-07-10
 ```
@@ -146,10 +146,11 @@ src/
 
 ## Known Issues and Workarounds
 
-### Sanity v4 Migration Notice
+### Sanity v4 Migration
 
-- **Notice**: Sanity package is moving to v4 on July 15, requires Node.js 20+
-- **Current setup**: Compatible with Node.js 20.19.4, no action needed
+- **Issue**: Sanity v4 migration is not possible due to dependency on sanity-plugin-image-asset-picker
+- **Current setup**: Staying on Sanity v3.98.1 which is compatible with Node.js 20.19.4
+- **Future**: Monitor plugin compatibility updates for potential migration path
 
 ### Sanity Studio Loading
 
